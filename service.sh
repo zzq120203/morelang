@@ -48,7 +48,7 @@ function __start() {
     pid=`jps | grep "$MCName" | awk  '{print $1}'`
     if [ -n "$pid" ]
     then
-        echo "$MCName is runing"
+        echo "$MCName is runing ==> PID:$pid"
     else    
         for i in `ls $libPath`;
         do 
@@ -59,8 +59,8 @@ function __start() {
             echo "ERROR:$JARName is not exist"
             exit
         fi
-        nohup java -Djava.library.path=$libraryPath -Dconfig=$confPath -Dlog4j.configuration=$log4jPath -Xms10g -Xmx20g -XX:+UseG1GC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -Xloggc:$logsPath/gc.log -cp $libs:$JARName $MCPath$MCName >> $logsPath/$MCName.log &
-        echo "$MCName ==> PID:`jps | grep "$MCName"`"
+        nohup java -Djava.library.path=$libraryPath -Dconfig=$confPath -Dlog4j.configuration=$log4jPath -Xms10g -Xmx20g -XX:+UseG1GC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -Xloggc:$logsPath/gc.log -cp $libs:$JARName $MCPath$MCName >> $logsPath/$MCName.log 2>&1 &
+        echo "$MCName ==> PID:`jps | grep "$MCName" | awk  '{print $1}'`"
 
     fi
 }
