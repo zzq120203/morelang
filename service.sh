@@ -60,8 +60,8 @@ function __start() {
             exit
         fi
         nohup java -Djava.library.path=$libraryPath -Dconfig=$confPath -Dlog4j.configuration=$log4jPath -Xms10g -Xmx20g -XX:+UseG1GC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -Xloggc:$logsPath/gc.log -cp $libs:$JARName $MCPath$MCName >> $logsPath/$MCName.log &
-        
-        echo "PID:`jps | grep "$MCName"`"
+        echo "$MCName ==> PID:`jps | grep "$MCName"`"
+
     fi
 }
 
@@ -70,7 +70,7 @@ function __stop() {
     if [ -n "$pid" ]
     then
         kill $pid
-        echo "kill PID : $pid"
+        echo "Kill $MCName ==> PID:$pid"
     else
         echo "$MCName is not running"
     fi
@@ -83,7 +83,7 @@ function __reboot() {
     while [[ "$i" -ne 0 ]]
     do
         sleep 1
-        echo "sleep stop PID : $pid" 
+        echo "Wait until $MCName stops ==> PID:$pid" 
         i=`jps | grep "$MCName" | wc -l`
     done
     
@@ -97,25 +97,26 @@ function __help() {
     exit
 }
 
+
 if [ "x$1" == "x" ]; then
-    echo "ERROR:args is NULL"
+    echo "ERROR:Parameter cannot be null"
     __help;
 elif [ "x$1" == "xstart" ]; then
-    echo "run $MCName"
+    echo "Start $MCName"
     if [ ! "x$2" == "x" ]; then
         JARName=$2
     fi
     __start;
 elif [ "x$1" == "xreboot" ]; then
-    echo "reboot $MCName"
+    echo "Reboot $MCName"
     if [ ! "x$2" == "x" ]; then
         JARName=$2
     fi
     __reboot;
 elif [ "x$1" == "xstop" ]; then
-    echo "stop $MCName"
+    echo "Stop $MCName"
     __stop;
 else
-    echo "ERROR:args is error"
+    echo "ERROR:Parameter error"
     __help;
 fi
